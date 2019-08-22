@@ -1,7 +1,5 @@
 package dk.coding.blog.Controller;
 
-import dk.coding.blog.bean.User;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -18,9 +16,9 @@ public class MediaTypeController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping("/user")
-	public User getUser() {
-		return new User("waylau", 30);
-	}
+//	@RequestMapping("/user")
+//	public User getUser() {
+//		return new User("waylau", 30);
+//	}
 
 }

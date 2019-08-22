@@ -1,20 +1,21 @@
 package dk.coding.blog.bean;
 
+import lombok.Data;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * User. 
  * @author <a href="https://waylau.com">Way Lau</a>
  * @date 2017年2月24日
  */
+@Data
 @Entity
-@XmlRootElement // mediatype 转为xml
+//@XmlRootElement // mediatype 转为xml
 public class User {
-
 
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY) // 自增长策略
@@ -25,7 +26,8 @@ public class User {
 	public User() {
 	}
 
-	public User(String name, int age) {
+	public User(Long id ,String name, int age) {
+	    this.id = id ;
 		this.name = name;
 		this.age = age;
 	}
