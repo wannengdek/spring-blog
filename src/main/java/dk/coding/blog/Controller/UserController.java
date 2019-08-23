@@ -78,9 +78,11 @@ public class UserController {
 	 */
 	@PostMapping
 	public ResponseEntity<Response> create(User user, Long authorityId) {
+
+
 		List<Authority> authorities = new ArrayList<>();
 		authorities.add(authorityService.getAuthorityById(authorityId));
-		user.setAuthorities(authorities);
+		user.setAuthorities(authorities); //处理
 		
 		if(user.getId() == null) {
 			user.setEncodePassword(user.getPassword()); // 加密密码

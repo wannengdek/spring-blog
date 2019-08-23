@@ -94,6 +94,7 @@ public class User implements UserDetails, Serializable {
 		this.email = email;
 	}
 	
+	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		//  需将 List<Authority> 转成 List<SimpleGrantedAuthority>，否则前端拿不到角色列表名称
 		List<SimpleGrantedAuthority> simpleAuthorities = new ArrayList<>();

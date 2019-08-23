@@ -74,6 +74,8 @@ public class MainController {
 		List<Authority> authorities = new ArrayList<>();
 		authorities.add(authorityService.getAuthorityById(ROLE_USER_AUTHORITY_ID));
 		user.setAuthorities(authorities);
+		//分配权限
+
 		userService.saveUser(user);
 		return "redirect:/login";
 	}
