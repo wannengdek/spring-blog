@@ -7,20 +7,20 @@ import javax.persistence.*;
 /**
  * 权限.
  * 
- * @since 1.0.0 2017年3月14日
- * @author <a href="https://waylau.com">Way Lau</a>
+ * @since 1.0.0 2017年5月30日
+ * @author <a href="https://waylau.com">Way Lau</a> 
  */
-@Entity // 实体
+@Entity
 public class Authority implements GrantedAuthority {
 
 	private static final long serialVersionUID = 1L;
 
-	@Id // 主键
-	@GeneratedValue(strategy = GenerationType.IDENTITY) // 自增长策略
-	private Long id; // 用户的唯一标识
+    @Id // 主键
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // 自增长策略
+    private Long id; // 用户的唯一标识
 
-	@Column(nullable = false) // 映射为字段，值不能为空
-	private String name;
+    @Column(nullable = false) // 映射为字段，值不能为空
+    private String name;
 
 	public Long getId() {
 		return id;
@@ -30,17 +30,13 @@ public class Authority implements GrantedAuthority {
 		this.id = id;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.security.core.GrantedAuthority#getAuthority()
-	 */
 	@Override
 	public String getAuthority() {
 		return name;
 	}
-
+	
 	public void setName(String name) {
 		this.name = name;
 	}
+
 }

@@ -1,22 +1,16 @@
 package dk.coding.blog.vo;
 
-import java.io.Serializable;
-
 /**
- * 菜单 值对象.
+ * 后台管理的菜单.
  * 
+ * @since 1.0.0 2017年5月29日
+ * @author <a href="https://waylau.com">Way Lau</a> 
  */
-public class Menu implements Serializable{
- 
-	private static final long serialVersionUID = 1L;
-	
-	private String name;
-	private String url;
-	
-	public Menu(String name, String url) {
-		this.name = name;
-		this.url = url;
-	}
+public class Menu {
+
+    private String name; // 菜单名称
+    private String url; // 菜单 URL
+    
 	public String getName() {
 		return name;
 	}
@@ -27,6 +21,11 @@ public class Menu implements Serializable{
 		return url;
 	}
 	public void setUrl(String url) {
+		this.url = url;
+	}
+	
+	public Menu(String name, String url) {
+		this.name = name;
 		this.url = url;
 	}
 }

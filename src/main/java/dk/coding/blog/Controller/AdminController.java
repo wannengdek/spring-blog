@@ -11,15 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 用户控制器.
+ * 后台管理控制器.
  * 
- * @author <a href="https://waylau.com">Way Lau</a>
- * @date 2017年2月26日
+ * @since 1.0.0 2017年5月28日
+ * @author <a href="https://waylau.com">Way Lau</a> 
  */
 @Controller
 @RequestMapping("/admins")
 public class AdminController {
-
+ 
 	/**
 	 * 获取后台管理主页面
 	 * @return
@@ -28,12 +28,8 @@ public class AdminController {
 	public ModelAndView listUsers(Model model) {
 		List<Menu> list = new ArrayList<>();
 		list.add(new Menu("用户管理", "/users"));
-		list.add(new Menu("角色管理", "/roles"));
-		list.add(new Menu("博客管理", "/blogs"));
-		list.add(new Menu("评论管理", "/commits"));
 		model.addAttribute("list", list);
 		return new ModelAndView("/admins/index", "model", model);
 	}
- 
-	 
+
 }

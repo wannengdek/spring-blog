@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 /**
- * 主页控制器.
+ * Blog 控制器.
  * 
- * @since 1.0.0 2017年3月8日
+ * @since 1.0.0 2017年5月28日
  * @author <a href="https://waylau.com">Way Lau</a> 
  */
 @Controller
@@ -17,9 +17,9 @@ public class BlogController {
 	
 	@GetMapping
 	public String listBlogs(@RequestParam(value="order",required=false,defaultValue="new") String order,
-			@RequestParam(value="tag",required=false) Long tag) {
-		System.out.print("order:" +order + ";tag:" +tag );
-		return "redirect:/index?order="+order+"&tag="+tag;
+			@RequestParam(value="keyword",required=false,defaultValue="" ) String keyword){
+		System.out.println("order:" +order + ";keyword:" +keyword );
+		return "redirect:/index?order="+order+"&keyword="+keyword;
 	}
 
 }
