@@ -104,6 +104,17 @@
             <version>5.1.6.RELEASE</version>
             <scope>compile</scope>
         </dependency>
+        <!--        整合es-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+             <version>4.5.1</version>
+        </dependency>
+
 
 
         <!--        &lt;!&ndash; redis 相关&ndash;&gt;-->

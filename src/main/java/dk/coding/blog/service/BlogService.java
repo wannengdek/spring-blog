@@ -17,6 +17,7 @@ import java.util.Optional;
 public interface BlogService {
 	/**
 	 * 保存Blog
+	 * @param EsBlog
 	 * @return
 	 */
 	Blog saveBlog(Blog blog);
