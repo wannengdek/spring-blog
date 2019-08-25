@@ -263,9 +263,12 @@ public class UserspaceController {
 
 		// 判断密码是否做了变更
 		String rawPassword = originalUser.getPassword();
+		System.out.println("rawPassword"+rawPassword);
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
 		String encodePasswd = encoder.encode(user.getPassword());
+		System.out.println("encodePasswd"+encodePasswd);
 		boolean isMatch = encoder.matches(rawPassword, encodePasswd);
+
 		if (!isMatch) {
 			originalUser.setEncodePassword(user.getPassword());
 		}
@@ -293,7 +296,6 @@ public class UserspaceController {
 	 * 保存头像
 	 * 
 	 * @param username
-	 * @param model
 	 * @return
 	 */
 	@PostMapping("/{username}/avatar")
@@ -302,7 +304,9 @@ public class UserspaceController {
 		String avatarUrl = user.getAvatar();
 
 		User originalUser = userService.getUserById(user.getId()).get();
+
 		originalUser.setAvatar(avatarUrl);
+
 		userService.saveOrUpateUser(originalUser);
 
 		return ResponseEntity.ok().body(new Response(true, "处理成功", avatarUrl));
