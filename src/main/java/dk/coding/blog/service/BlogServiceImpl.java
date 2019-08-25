@@ -3,6 +3,7 @@ package dk.coding.blog.service;
 import dk.coding.blog.bean.Blog;
 import dk.coding.blog.bean.Comment;
 import dk.coding.blog.bean.User;
+import dk.coding.blog.bean.Vote;
 import dk.coding.blog.repository.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -79,13 +80,11 @@ public class BlogServiceImpl implements BlogService {
 		Blog originalBlog = null;
 		if(optionalBlog.isPresent()) {
 			originalBlog = optionalBlog.get();
-			System.out.println(originalBlog.getContent());
 			User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			System.out.println(user.toString());
 			Comment comment = new Comment(user, commentContent);
-			System.out.println(comment.toString());
 			originalBlog.addComment(comment);
 		}
+
 		return this.saveBlog(originalBlog);
 	}
 
@@ -95,6 +94,36 @@ public class BlogServiceImpl implements BlogService {
 		if(optionalBlog.isPresent()) {
 			Blog originalBlog = optionalBlog.get();
 			originalBlog.removeComment(commentId);
+			this.saveBlog(originalBlog);
+		}
+	}
+	
+	@Override
+	public Blog createVote(Long blogId) {
+		Optional<Blog> optionalBlog = blogRepository.findById(blogId);
+		Blog originalBlog = null;
+ 
+		if (optionalBlog.isPresent()) {
+			originalBlog = optionalBlog.get();
+			
+			User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
+			Vote vote = new Vote(user);
+			boolean isExist = originalBlog.addVote(vote);
+			if (isExist) {
+				throw new IllegalArgumentException("该用户已经点过赞了");
+			}
+		}
+		return this.saveBlog(originalBlog);
+	}
+
+	@Override
+	public void removeVote(Long blogId, Long voteId) {
+		Optional<Blog> optionalBlog = blogRepository.findById(blogId);
+		Blog originalBlog = null;
+ 
+		if (optionalBlog.isPresent()) {
+			originalBlog = optionalBlog.get();
+			originalBlog.removeVote(voteId);
 			this.saveBlog(originalBlog);
 		}
 	}

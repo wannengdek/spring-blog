@@ -2,6 +2,7 @@ package dk.coding.blog.Controller;
 
 import dk.coding.blog.bean.Blog;
 import dk.coding.blog.bean.User;
+import dk.coding.blog.bean.Vote;
 import dk.coding.blog.service.BlogService;
 import dk.coding.blog.service.UserService;
 import dk.coding.blog.util.ConstraintViolationExceptionHandler;
@@ -30,7 +31,7 @@ import java.util.Optional;
 
 /**
  * 用户主页控制器.
- * 
+ *
  * @since 1.0.0 2017年5月28日
  * @author <a href="https://waylau.com">Way Lau</a>
  */
@@ -52,7 +53,7 @@ public class UserspaceController {
 
 	/**
 	 * 用户的主页
-	 * 
+	 *
 	 * @param username
 	 * @param model
 	 * @return
@@ -66,7 +67,7 @@ public class UserspaceController {
 
 	/**
 	 * 获取用户的博客列表
-	 * 
+	 *
 	 * @param username
 	 * @param order
 	 * @param catalogId
@@ -78,14 +79,13 @@ public class UserspaceController {
 	 * @return
 	 */
 	@GetMapping("/{username}/blogs")
-
 	public String listBlogsByOrder(@PathVariable("username") String username,
-			@RequestParam(value = "order", required = false, defaultValue = "new") String order,
-			@RequestParam(value = "catalog", required = false) Long catalogId,
-			@RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
-			@RequestParam(value = "async", required = false) boolean async,
-			@RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex,
-			@RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize, Model model) {
+								   @RequestParam(value = "order", required = false, defaultValue = "new") String order,
+								   @RequestParam(value = "catalog", required = false) Long catalogId,
+								   @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+								   @RequestParam(value = "async", required = false) boolean async,
+								   @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex,
+								   @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize, Model model) {
 
 		User user = (User) userDetailsService.loadUserByUsername(username);
 
@@ -115,17 +115,21 @@ public class UserspaceController {
 
 	/**
 	 * 获取博客展示界面
-	 * 
+	 *
 	 * @param username
 	 * @param id
 	 * @param model
 	 * @return
 	 */
 	@GetMapping("/{username}/blogs/{id}")
-
 	public String getBlogById(@PathVariable("username") String username, @PathVariable("id") Long id, Model model) {
 		User principal = null;
-		Optional<Blog> blog = blogService.getBlogById(id);
+		Optional<Blog> optionalBlog = blogService.getBlogById(id);
+		Blog blog = null;
+
+		if (optionalBlog.isPresent()) {
+			blog = optionalBlog.get();
+		}
 
 		// 每次读取，简单的可以认为阅读量增加1次
 		blogService.readingIncrease(id);
@@ -134,22 +138,37 @@ public class UserspaceController {
 		boolean isBlogOwner = false;
 		if (SecurityContextHolder.getContext().getAuthentication() != null
 				&& SecurityContextHolder.getContext().getAuthentication().isAuthenticated() && !SecurityContextHolder
-						.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
+				.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
 			principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			if (principal != null && username.equals(principal.getUsername())) {
 				isBlogOwner = true;
 			}
 		}
 
+		// 判断操作用户的点赞情况
+		List<Vote> votes = blog.getVotes();
+		Vote currentVote = null; // 当前用户的点赞情况
+
+		if (principal !=null) {
+			for (Vote vote : votes) {
+				if (vote.getUser().getUsername().equals(principal.getUsername())) {
+					currentVote = vote;
+					break;
+				}
+
+			}
+		}
+
+		model.addAttribute("currentVote",currentVote);
 		model.addAttribute("isBlogOwner", isBlogOwner);
-		model.addAttribute("blogModel", blog.get());
+		model.addAttribute("blogModel", blog);
 
 		return "/userspace/blog";
 	}
 
 	/**
 	 * 获取新增博客的界面
-	 * 
+	 *
 	 * @param model
 	 * @return
 	 */
@@ -162,7 +181,7 @@ public class UserspaceController {
 
 	/**
 	 * 获取编辑博客的界面
-	 * 
+	 *
 	 * @param model
 	 * @return
 	 */
@@ -175,7 +194,7 @@ public class UserspaceController {
 
 	/**
 	 * 保存博客
-	 * 
+	 *
 	 * @param username
 	 * @param blog
 	 * @return
@@ -214,7 +233,7 @@ public class UserspaceController {
 
 	/**
 	 * 删除博客
-	 * 
+	 *
 	 * @param username
 	 * @param id
 	 * @return
@@ -235,7 +254,7 @@ public class UserspaceController {
 
 	/**
 	 * 获取个人设置页面
-	 * 
+	 *
 	 * @param username
 	 * @param model
 	 * @return
@@ -251,7 +270,7 @@ public class UserspaceController {
 
 	/**
 	 * 保存个人设置
-	 * 
+	 *
 	 * @param username
 	 * @param user
 	 * @return
@@ -265,12 +284,9 @@ public class UserspaceController {
 
 		// 判断密码是否做了变更
 		String rawPassword = originalUser.getPassword();
-		System.out.println("rawPassword"+rawPassword);
 		PasswordEncoder encoder = new BCryptPasswordEncoder();
 		String encodePasswd = encoder.encode(user.getPassword());
-		System.out.println("encodePasswd"+encodePasswd);
 		boolean isMatch = encoder.matches(rawPassword, encodePasswd);
-
 		if (!isMatch) {
 			originalUser.setEncodePassword(user.getPassword());
 		}
@@ -281,7 +297,7 @@ public class UserspaceController {
 
 	/**
 	 * 获取编辑头像的界面
-	 * 
+	 *
 	 * @param username
 	 * @param model
 	 * @return
@@ -296,7 +312,7 @@ public class UserspaceController {
 
 	/**
 	 * 保存头像
-	 * 
+	 *
 	 * @param username
 	 * @return
 	 */
@@ -306,9 +322,7 @@ public class UserspaceController {
 		String avatarUrl = user.getAvatar();
 
 		User originalUser = userService.getUserById(user.getId()).get();
-
 		originalUser.setAvatar(avatarUrl);
-
 		userService.saveOrUpateUser(originalUser);
 
 		return ResponseEntity.ok().body(new Response(true, "处理成功", avatarUrl));
