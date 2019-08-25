@@ -1,6 +1,7 @@
 package dk.coding.blog.repository;
 
 import dk.coding.blog.bean.Blog;
+import dk.coding.blog.bean.Catalog;
 import dk.coding.blog.bean.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,5 +34,13 @@ public interface BlogRepository extends JpaRepository<Blog, Long>{
 	 * @return
 	 */
 	Page<Blog> findByTitleLikeAndUserOrTagsLikeAndUserOrderByCreateTimeDesc(String title,
-			User user, String tags, User user2, Pageable pageable);
+																			User user, String tags, User user2, Pageable pageable);
+	
+	/**
+	 * 根据分类查询博客列表
+	 * @param catalog
+	 * @param pageable
+	 * @return
+	 */
+	Page<Blog> findByCatalog(Catalog catalog, Pageable pageable);
 }

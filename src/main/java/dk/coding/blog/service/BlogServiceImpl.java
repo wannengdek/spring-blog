@@ -1,9 +1,6 @@
 package dk.coding.blog.service;
 
-import dk.coding.blog.bean.Blog;
-import dk.coding.blog.bean.Comment;
-import dk.coding.blog.bean.User;
-import dk.coding.blog.bean.Vote;
+import dk.coding.blog.bean.*;
 import dk.coding.blog.repository.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -80,7 +77,7 @@ public class BlogServiceImpl implements BlogService {
 		Blog originalBlog = null;
 		if(optionalBlog.isPresent()) {
 			originalBlog = optionalBlog.get();
-			User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
 			Comment comment = new Comment(user, commentContent);
 			originalBlog.addComment(comment);
 		}
@@ -106,13 +103,14 @@ public class BlogServiceImpl implements BlogService {
 		if (optionalBlog.isPresent()) {
 			originalBlog = optionalBlog.get();
 			
-			User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
+			User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			Vote vote = new Vote(user);
 			boolean isExist = originalBlog.addVote(vote);
 			if (isExist) {
 				throw new IllegalArgumentException("该用户已经点过赞了");
 			}
 		}
+
 		return this.saveBlog(originalBlog);
 	}
 
@@ -126,5 +124,11 @@ public class BlogServiceImpl implements BlogService {
 			originalBlog.removeVote(voteId);
 			this.saveBlog(originalBlog);
 		}
+	}
+	
+	@Override
+	public Page<Blog> listBlogsByCatalog(Catalog catalog, Pageable pageable) {
+		Page<Blog> blogs = blogRepository.findByCatalog(catalog, pageable);
+		return blogs;
 	}
 }

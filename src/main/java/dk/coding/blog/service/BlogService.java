@@ -1,6 +1,7 @@
 package dk.coding.blog.service;
 
 import dk.coding.blog.bean.Blog;
+import dk.coding.blog.bean.Catalog;
 import dk.coding.blog.bean.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -84,5 +85,13 @@ public interface BlogService {
 	 * @return
 	 */
 	void removeVote(Long blogId, Long voteId);
+
+	/**
+	 * 根据分类进行查询
+	 * @param catalog
+	 * @param pageable
+	 * @return
+	 */
+	Page<Blog> listBlogsByCatalog(Catalog catalog, Pageable pageable);
  
 }
