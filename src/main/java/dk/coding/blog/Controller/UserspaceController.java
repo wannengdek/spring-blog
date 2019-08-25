@@ -78,6 +78,7 @@ public class UserspaceController {
 	 * @return
 	 */
 	@GetMapping("/{username}/blogs")
+
 	public String listBlogsByOrder(@PathVariable("username") String username,
 			@RequestParam(value = "order", required = false, defaultValue = "new") String order,
 			@RequestParam(value = "catalog", required = false) Long catalogId,
@@ -121,6 +122,7 @@ public class UserspaceController {
 	 * @return
 	 */
 	@GetMapping("/{username}/blogs/{id}")
+
 	public String getBlogById(@PathVariable("username") String username, @PathVariable("id") Long id, Model model) {
 		User principal = null;
 		Optional<Blog> blog = blogService.getBlogById(id);
