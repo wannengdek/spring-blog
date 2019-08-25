@@ -241,7 +241,8 @@ public class UserspaceController {
 					orignalBlog.setTitle(blog.getTitle());
 					orignalBlog.setContent(blog.getContent());
 					orignalBlog.setSummary(blog.getSummary());
-					orignalBlog.setCatalog(blog.getCatalog()); // 增加对分类的处理 
+					orignalBlog.setCatalog(blog.getCatalog()); // 增加对分类的处理
+					orignalBlog.setTags(blog.getTags());
 					blogService.saveBlog(orignalBlog);
 				}
 			} else {
