@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	@Transactional
+//	@Transactional
 	@Override
 	public User saveOrUpateUser(User user) {
 		return userRepository.save(user);
