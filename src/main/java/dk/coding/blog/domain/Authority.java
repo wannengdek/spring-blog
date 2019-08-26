@@ -1,4 +1,4 @@
-package dk.coding.blog.bean;
+package dk.coding.blog.domain;
 
 import org.springframework.security.core.GrantedAuthority;
 

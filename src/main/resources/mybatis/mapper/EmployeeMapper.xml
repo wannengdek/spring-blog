@@ -6,7 +6,7 @@
    <!--    public Employee getEmpById(Integer id);
 
     public void insertEmp(Employee employee);-->
-    <select id="getEmpById" resultType="dk.coding.blog.bean.Employee">
+    <select id="getEmpById" resultType="dk.coding.blog.domain.Employee">
         SELECT * FROM employee WHERE id=#{id}
     </select>
 
@@ -14,7 +14,7 @@
         INSERT INTO employee(lastName,email,gender,d_id) VALUES (#{lastName},#{email},#{gender},#{dId})
     </insert>
 
-    <select id="selectByIdAll" resultType="dk.coding.blog.bean.Employee">
+    <select id="selectByIdAll" resultType="dk.coding.blog.domain.Employee">
         select * from employee
     </select>
 </mapper>

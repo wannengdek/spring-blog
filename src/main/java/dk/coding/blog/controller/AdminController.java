@@ -1,4 +1,4 @@
-package dk.coding.blog.Controller;
+package dk.coding.blog.controller;
 
 import dk.coding.blog.vo.Menu;
 import org.springframework.stereotype.Controller;
@@ -11,15 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 后台管理控制器.
+ * 用户控制器.
  * 
- * @since 1.0.0 2017年5月28日
- * @author <a href="https://waylau.com">Way Lau</a> 
+ * @author <a href="https://waylau.com">Way Lau</a>
+ * @date 2017年2月26日
  */
 @Controller
 @RequestMapping("/admins")
 public class AdminController {
- 
+
 	/**
 	 * 获取后台管理主页面
 	 * @return
@@ -31,5 +31,6 @@ public class AdminController {
 		model.addAttribute("list", list);
 		return new ModelAndView("/admins/index", "model", model);
 	}
-
+ 
+	 
 }

@@ -1,41 +1,34 @@
 package dk.coding.blog.service;
 
-import dk.coding.blog.bean.User;
+import dk.coding.blog.domain.User;
 import dk.coding.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 /**
- * 用户服务接口实现.
- *
- * @since 1.0.0 2017年7月27日
- * @author <a href="https://waylau.com">Way Lau</a> 
+ * User 服务.
  */
-@Service
-public class UserServiceImpl implements UserService, UserDetailsService {
+@Service("UserService")
+public class UserServiceImpl  implements UserService ,UserDetailsService {
+
+	private final UserRepository userRepository;
 
 	@Autowired
-	private UserRepository userRepository;
-	
-//	@Transactional
-	@Override
-	public User saveOrUpateUser(User user) {
-		return userRepository.save(user);
+	public UserServiceImpl(UserRepository userRepository) {
+		this.userRepository = userRepository;
 	}
 
 	@Transactional
 	@Override
-	public User registerUser(User user) {
+	public User saveUser(User user) {
 		return userRepository.save(user);
 	}
 
@@ -45,28 +38,43 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 		userRepository.deleteById(id);
 	}
 
+	@Transactional
 	@Override
-	public Optional<User> getUserById(Long id) {
-		return userRepository.findById(id);
+	public void removeUsersInBatch(List<User> users) {
+		userRepository.deleteInBatch(users);
+	}
+	
+	@Transactional
+	@Override
+	public User updateUser(User user) {
+		return userRepository.save(user);
+	}
+
+	@Override
+	public User getUserById(Long id) {
+		return userRepository.getOne(id);
+	}
+
+	@Override
+	public List<User> listUsers() {
+		return userRepository.findAll();
 	}
 
 	@Override
 	public Page<User> listUsersByNameLike(String name, Pageable pageable) {
-		
-        // 模糊查询
-        name = "%" + name + "%";
-        Page<User> users = userRepository.findByNameLike(name, pageable);
-        return users;
+		// 模糊查询
+		name = "%" + name + "%";
+		return userRepository.findByNameLike(name, pageable);
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username){
 		return userRepository.findByUsername(username);
 	}
-			
+
 	@Override
 	public List<User> listUsersByUsernames(Collection<String> usernames) {
 		return userRepository.findByUsernameIn(usernames);
 	}
- 
+
 }

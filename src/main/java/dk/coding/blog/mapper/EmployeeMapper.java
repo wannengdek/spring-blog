@@ -1,6 +1,6 @@
 package dk.coding.blog.mapper;
 
-import dk.coding.blog.bean.Employee;
+import dk.coding.blog.domain.Employee;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

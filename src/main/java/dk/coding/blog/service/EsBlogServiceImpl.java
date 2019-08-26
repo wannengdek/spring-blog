@@ -1,7 +1,7 @@
 package dk.coding.blog.service;
 
-import dk.coding.blog.bean.User;
-import dk.coding.blog.bean.es.EsBlog;
+import dk.coding.blog.domain.User;
+import dk.coding.blog.domain.es.EsBlog;
 import dk.coding.blog.repository.es.EsBlogRepository;
 import dk.coding.blog.vo.TagVO;
 import org.elasticsearch.action.search.SearchResponse;
@@ -32,7 +32,7 @@ import static org.elasticsearch.search.aggregations.AggregationBuilders.terms;
 
 /**
  * EsBlog 服务.
- * 
+ *
  * @since 1.0.0 2017年4月12日
  * @author <a href="https://waylau.com">Way Lau</a>
  */
@@ -96,7 +96,8 @@ public class EsBlogServiceImpl implements EsBlogService {
 
 	/**
 	 * 最新前5
-	 * 
+	 *
+	 * @param keyword
 	 * @return
 	 */
 	@Override
@@ -107,7 +108,8 @@ public class EsBlogServiceImpl implements EsBlogService {
 
 	/**
 	 * 最热前5
-	 * 
+	 *
+	 * @param keyword
 	 * @return
 	 */
 	@Override
@@ -120,21 +122,21 @@ public class EsBlogServiceImpl implements EsBlogService {
 	public List<TagVO> listTop30Tags() {
 
 		List<TagVO> list = new ArrayList<>();
-		
+
 		// 查询条件
 		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(matchAllQuery())
 				.withSearchType(SearchType.QUERY_THEN_FETCH).withIndices("blog").withTypes("blog")
 				.addAggregation(terms("tags").field("tags")
-				.order(Terms.Order.count(false)).size(30)).build();
-		
+						.order(Terms.Order.count(false)).size(30)).build();
+
 		// 聚合
 		Aggregations aggregations = elasticsearchTemplate.query(searchQuery,
 				new ResultsExtractor<Aggregations>() {
-			@Override
-			public Aggregations extract(SearchResponse response) {
-				return response.getAggregations();
-			}
-		});
+					@Override
+					public Aggregations extract(SearchResponse response) {
+						return response.getAggregations();
+					}
+				});
 
 		StringTerms modelTerms = (StringTerms) aggregations.asMap().get("tags");
 
@@ -151,20 +153,20 @@ public class EsBlogServiceImpl implements EsBlogService {
 	public List<User> listTop12Users() {
 
 		List<String> usernamelist = new ArrayList<>();// 存储排序后的用户账号
-		
+
 		// 查询条件
 		SearchQuery searchQuery = new NativeSearchQueryBuilder().withQuery(matchAllQuery())
 				.withSearchType(SearchType.QUERY_THEN_FETCH).withIndices("blog").withTypes("blog")
 				.addAggregation(terms("users").field("username")
-				.order(Terms.Order.count(false)).size(12)).build();
+						.order(Terms.Order.count(false)).size(12)).build();
 		// 聚合
-		Aggregations aggregations = elasticsearchTemplate.query(searchQuery, 
+		Aggregations aggregations = elasticsearchTemplate.query(searchQuery,
 				new ResultsExtractor<Aggregations>() {
-			@Override
-			public Aggregations extract(SearchResponse response) {
-				return response.getAggregations();
-			}
-		});
+					@Override
+					public Aggregations extract(SearchResponse response) {
+						return response.getAggregations();
+					}
+				});
 
 		StringTerms modelTerms = (StringTerms) aggregations.asMap().get("users");
 
@@ -177,10 +179,10 @@ public class EsBlogServiceImpl implements EsBlogService {
 
 		// 根据用户名，查出用户的详细信息
 		List<User> list = userService.listUsersByUsernames(usernamelist);
-		
+
 		// 按照 usernamelist 的顺序返回用户对象
 		List<User> returnList = new ArrayList<>();
-		
+
 		for (String username : usernamelist) {
 			for (User user : list) {
 				if (username.equals(user.getUsername())) {
@@ -189,7 +191,7 @@ public class EsBlogServiceImpl implements EsBlogService {
 				}
 			}
 		}
-		
+
 		return returnList;
 	}
 }

@@ -1,9 +1,8 @@
-package dk.coding.blog.Controller;
+package dk.coding.blog.controller;
 
-import dk.coding.blog.bean.User;
-import dk.coding.blog.bean.Vote;
 import dk.coding.blog.service.BlogService;
 import dk.coding.blog.service.VoteService;
+import dk.coding.blog.domain.User;
 import dk.coding.blog.util.ConstraintViolationExceptionHandler;
 import dk.coding.blog.vo.Response;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.ConstraintViolationException;
-import java.util.Optional;
  
 
 /**
@@ -39,6 +37,7 @@ public class VoteController {
 	/**
 	 * 发表点赞
 	 * @param blogId
+	 * @param VoteContent
 	 * @return
 	 */
 	@PostMapping
@@ -48,8 +47,7 @@ public class VoteController {
 		try {
 			blogService.createVote(blogId);
 		} catch (ConstraintViolationException e)  {
-			return ResponseEntity.ok().body(new Response(false,
-					ConstraintViolationExceptionHandler.getMessage(e)));
+			return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
 		} catch (Exception e) {
 			return ResponseEntity.ok().body(new Response(false, e.getMessage()));
 		}
@@ -66,21 +64,12 @@ public class VoteController {
 	public ResponseEntity<Response> delete(@PathVariable("id") Long id, Long blogId) {
 		
 		boolean isOwner = false;
-		Optional<Vote> optionalVote = voteService.getVoteById(id);
-		User user = null;
-		if (optionalVote.isPresent()) {
-			user = optionalVote.get().getUser();
-		} else {
-			return ResponseEntity.ok().body(new Response(false, "不存在该点赞！"));
-		}
+		User user = voteService.getVoteById(id).getUser();
 		
 		// 判断操作用户是否是点赞的所有者
-		if (SecurityContextHolder.getContext().getAuthentication() !=null 
-				&& SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-				&&  !SecurityContextHolder.getContext().getAuthentication()
-				.getPrincipal().toString().equals("anonymousUser")) {
-			User principal = (User)SecurityContextHolder.getContext()
-					.getAuthentication().getPrincipal(); 
+		if (SecurityContextHolder.getContext().getAuthentication() !=null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
+				 &&  !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
+			User principal = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			if (principal !=null && user.getUsername().equals(principal.getUsername())) {
 				isOwner = true;
 			} 
@@ -94,8 +83,7 @@ public class VoteController {
 			blogService.removeVote(blogId, id);
 			voteService.removeVote(id);
 		} catch (ConstraintViolationException e)  {
-			return ResponseEntity.ok().body(new Response(false, 
-					ConstraintViolationExceptionHandler.getMessage(e)));
+			return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
 		} catch (Exception e) {
 			return ResponseEntity.ok().body(new Response(false, e.getMessage()));
 		}

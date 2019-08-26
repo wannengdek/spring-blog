@@ -1,32 +1,33 @@
 package dk.coding.blog.service;
 
-import dk.coding.blog.bean.Comment;
+import dk.coding.blog.domain.Comment;
 import dk.coding.blog.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import javax.transaction.Transactional;
 
 /**
- * Comment Service接口实现.
- * 
- * @since 1.0.0 2017年6月6日
- * @author <a href="https://waylau.com">Way Lau</a> 
+ * Comment 服务.
  */
 @Service
 public class CommentServiceImpl implements CommentService {
 
-    @Autowired
-    private CommentRepository commentRepository;
-    
-	@Override
-	public Optional<Comment> getCommentById(Long id) {
-		return commentRepository.findById(id);
+	private final CommentRepository commentRepository;
+
+	@Autowired
+	public CommentServiceImpl(CommentRepository commentRepository) {
+		this.commentRepository = commentRepository;
 	}
 
 	@Override
+	@Transactional
 	public void removeComment(Long id) {
 		commentRepository.deleteById(id);
+	}
+	@Override
+	public Comment getCommentById(Long id) {
+		return commentRepository.findById(id).orElse(null);
 	}
 
 }

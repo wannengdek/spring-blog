@@ -1,13 +1,13 @@
-//package dk.coding.blog.Controller;
+//package dk.coding.blog.controller;
 //
-//import org.springframework.stereotype.Controller;
+//import org.springframework.stereotype.controller;
 //import org.springframework.ui.Model;
 //import org.springframework.web.bind.annotation.GetMapping;
 //
 ///**
 // * 主页控制器.
 // */
-//@Controller
+//@controller
 //public class MainController {
 ////	private static final Long ROLE_USER_AUTHORITY_ID = 2L;
 ////	private final UserService userService;

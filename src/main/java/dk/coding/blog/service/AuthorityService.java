@@ -1,20 +1,15 @@
 package dk.coding.blog.service;
 
-import dk.coding.blog.bean.Authority;
-
-import java.util.Optional;
+import dk.coding.blog.domain.Authority;
 
 /**
  * Authority 服务接口.
- * 
- * @since 1.0.0 2017年5月30日
- * @author <a href="https://waylau.com">Way Lau</a> 
  */
 public interface AuthorityService {
+	 
+	
 	/**
-	 * 根据ID查询 Authority
-	 * @param id
-	 * @return
+	 * 根据id获取 Authority
 	 */
-	Optional<Authority> getAuthorityById(Long id);
+	Authority getAuthorityById(Long id);
 }

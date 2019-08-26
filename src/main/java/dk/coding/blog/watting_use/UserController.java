@@ -1,6 +1,6 @@
-//package dk.coding.blog.Controller;
+//package dk.coding.blog.controller;
 //
-//import dk.coding.blog.bean.User;
+//import dk.coding.blog.domain.User;
 //import dk.coding.blog.repository.UserRepository;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.ui.Model;

@@ -1,7 +1,7 @@
 package dk.coding.blog.vo;
 
 
-import dk.coding.blog.bean.Catalog;
+import dk.coding.blog.domain.Catalog;
 
 /**
  * Catalog VO.

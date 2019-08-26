@@ -1,8 +1,8 @@
-package dk.coding.blog.Controller;
+package dk.coding.blog.controller;
 
-import dk.coding.blog.bean.Catalog;
-import dk.coding.blog.bean.User;
 import dk.coding.blog.service.CatalogService;
+import dk.coding.blog.domain.Catalog;
+import dk.coding.blog.domain.User;
 import dk.coding.blog.util.ConstraintViolationExceptionHandler;
 import dk.coding.blog.vo.CatalogVO;
 import dk.coding.blog.vo.Response;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
-import java.util.Optional;
  
 
 /**
@@ -35,10 +34,9 @@ public class CatalogController {
 	
 	@Autowired
 	private UserDetailsService userDetailsService;
-
 	/**
 	 * 获取分类列表
-	 * @param username
+	 * @param blogId
 	 * @param model
 	 * @return
 	 */
@@ -50,11 +48,9 @@ public class CatalogController {
 		// 判断操作用户是否是分类的所有者
 		boolean isOwner = false;
 		
-		if (SecurityContextHolder.getContext().getAuthentication() !=null 
-				&& SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
-				 &&  !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()
-				 .equals("anonymousUser")) {
-			User principal = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (SecurityContextHolder.getContext().getAuthentication() !=null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()
+				 &&  !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
+			User principal = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal(); 
 			if (principal !=null && user.getUsername().equals(principal.getUsername())) {
 				isOwner = true;
 			} 
@@ -64,10 +60,10 @@ public class CatalogController {
 		model.addAttribute("catalogs", catalogs);
 		return "/userspace/u :: #catalogRepleace";
 	}
-	
 	/**
-	 * 创建分类
-	 * @param catalogVO
+	 * 发表分类
+	 * @param blogId
+	 * @param commentContent
 	 * @return
 	 */
 	@PostMapping
@@ -83,8 +79,7 @@ public class CatalogController {
 			catalog.setUser(user);
 			catalogService.saveCatalog(catalog);
 		} catch (ConstraintViolationException e)  {
-			return ResponseEntity.ok().body(new Response(false, 
-					ConstraintViolationExceptionHandler.getMessage(e)));
+			return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
 		} catch (Exception e) {
 			return ResponseEntity.ok().body(new Response(false, e.getMessage()));
 		}
@@ -94,8 +89,6 @@ public class CatalogController {
 	
 	/**
 	 * 删除分类
-	 * @param username
-	 * @param id
 	 * @return
 	 */
 	@DeleteMapping("/{id}")
@@ -104,8 +97,7 @@ public class CatalogController {
 		try {
 			catalogService.removeCatalog(id);
 		} catch (ConstraintViolationException e)  {
-			return ResponseEntity.ok().body(new Response(false, 
-					ConstraintViolationExceptionHandler.getMessage(e)));
+			return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
 		} catch (Exception e) {
 			return ResponseEntity.ok().body(new Response(false, e.getMessage()));
 		}
@@ -115,6 +107,7 @@ public class CatalogController {
 	
 	/**
 	 * 获取分类编辑界面
+	 * @param id
 	 * @param model
 	 * @return
 	 */
@@ -124,22 +117,15 @@ public class CatalogController {
 		model.addAttribute("catalog",catalog);
 		return "/userspace/catalogedit";
 	}
-	
 	/**
-	 * 根据 Id 获取编辑界面
+	 * 根据 Id 获取分类信息
 	 * @param id
 	 * @param model
 	 * @return
 	 */
 	@GetMapping("/edit/{id}")
 	public String getCatalogById(@PathVariable("id") Long id, Model model) {
-		Optional<Catalog> optionalCatalog = catalogService.getCatalogById(id);
-		Catalog catalog = null;
-		
-		if (optionalCatalog.isPresent()) {
-			catalog = optionalCatalog.get();
-		}
-		
+		Catalog catalog = catalogService.getCatalogById(id);
 		model.addAttribute("catalog",catalog);
 		return "/userspace/catalogedit";
 	}

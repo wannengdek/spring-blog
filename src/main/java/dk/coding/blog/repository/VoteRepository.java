@@ -1,13 +1,14 @@
 package dk.coding.blog.repository;
 
-import dk.coding.blog.bean.Vote;
+import dk.coding.blog.domain.Vote;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- * Vote Repository接口.
- * @since 1.0.0 2017年6月6日
+ * Vote 仓库.
+ *
+ * @since 1.0.0 2017年4月9日
  * @author <a href="https://waylau.com">Way Lau</a> 
  */
-public interface VoteRepository extends JpaRepository<Vote, Long> {
-	
+public interface VoteRepository extends JpaRepository<Vote, Long>{
+ 
 }

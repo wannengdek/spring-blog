@@ -1,6 +1,6 @@
-package dk.coding.blog.bean.es;
+package dk.coding.blog.domain.es;
 
-import dk.coding.blog.bean.Blog;
+import dk.coding.blog.domain.Blog;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;

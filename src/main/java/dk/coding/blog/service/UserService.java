@@ -1,59 +1,53 @@
 package dk.coding.blog.service;
 
-import dk.coding.blog.bean.User;
+import dk.coding.blog.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 /**
- * 用户服务接口.
- * 
- * @since 1.0.0 2017年7月27日
- * @author <a href="https://waylau.com">Way Lau</a> 
+ * User 服务接口.
  */
 public interface UserService {
-	 /**
-     * 新增、编辑、保存用户
-     * @param user
-     * @return
-     */
-    User saveOrUpateUser(User user);
-
-    /**
-     * 注册用户
-     * @param user
-     * @return
-     */
-    User registerUser(User user);
-
-    /**
-     * 删除用户
-     * @param id
-     */
-    void removeUser(Long id);
-
-    /**
-     * 根据id获取用户
-     * @param id
-     * @return
-     */
-    Optional<User> getUserById(Long id);
-
-    /**
-     * 根据用户名进行分页模糊查询
-     * @param name
-     * @param pageable
-     * @return
-     */
-    Page<User> listUsersByNameLike(String name, Pageable pageable);
-    
-    /**
-     * 根据用户名集合，查询用户详细信息列表
-     * @param usernames
-     * @return
-     */
-    List<User> listUsersByUsernames(Collection<String> usernames);
+	/**
+	 * 保存用户
+	 */
+	User saveUser(User user);
+	
+	/**
+	 * 删除用户
+	 */
+	void removeUser(Long id);
+	
+	/**
+	 * 删除列表里面的用户
+	 */
+	void removeUsersInBatch(List<User> users);
+	
+	/**
+	 * 更新用户
+	 */
+	User updateUser(User user);
+	
+	/**
+	 * 根据id获取用户
+	 */
+	User getUserById(Long id);
+	
+	/**
+	 * 获取用户列表
+	 */
+	List<User> listUsers();
+	
+	/**
+	 * 根据用户名进行分页模糊查询
+	 */
+	Page<User> listUsersByNameLike(String name, Pageable pageable);
+	
+	/**
+	 * 更具名称列表查询
+	 */
+	List<User> listUsersByUsernames(Collection<String> usernames);
 }
